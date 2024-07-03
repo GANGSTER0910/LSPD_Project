@@ -3,6 +3,12 @@ from fastapi import *
 from fastapi.middleware.cors import CORSMiddleware
 from typing import *
 from schema import *
+import jwt
+from jwt import JWT, jwk_from_dict
+from datetime import *
+from jwt.exceptions import JWSDecodeError
+from typing import Optional
+from fastapi.security import OAuth2PasswordBearer
 
 app = FastAPI()
     
@@ -22,11 +28,31 @@ app.add_middleware(
 client1 = MongoClient("mongodb+srv://harshpanchal0910:edmJPEiESrbswYYh@lspd.ffxzjfm.mongodb.net/?retryWrites=true&w=majority&appName=LSPD")
 db1 = client1['LSPD']
 
+Secret_key = "6TpmJhN0YzMEmgF_01F7Dpbg42_YBM7yg5oUCjOTukKSCUExzwBOSpz8SSs7AVC3PNHG1tjsdtBqhDPbzUS6tg"
+algorithm = 'HS256'
+access_token_expire_time = 30
+def create_access_token(data: dict, expires_delta: Optional[timedelta]=None):
+    to_encode = data.copy()
+    jwt_instance = JWT()
+    secret_key = jwk_from_dict({
+        "k":Secret_key,
+        "kty":"oct"
+    })
+    if expires_delta:
+        expire = datetime.utcnow() + expires_delta
+    else:
+        expire = datetime.utcnow() + timedelta(minutes=15)
+    to_encode.update({"exp":expire.isoformat()})
+    encoded_jwt = jwt_instance.encode(to_encode, secret_key,alg= algorithm)
+    return encoded_jwt
+
 @app.post("/users")
 async def create_user(user : User):
     user_dict = user.model_dump()
+    expire_timedelta = timedelta(minutes=access_token_expire_time)
+    user_token = create_access_token(user_dict,expire_timedelta)
     db1.get_collection('User').insert_one(user_dict)
-    return user
+    return user_token
 
 @app.get("/users/list", response_model= List[User])
 async def get_user():
