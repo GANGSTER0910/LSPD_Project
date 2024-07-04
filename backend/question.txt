@@ -6,7 +6,7 @@ Create a website for the Los Santos Police Department (LSPD) which can speed up 
 Features We Expect:
 
 Authentication: Implement Login / Signup - Role based: Admin and User
-Most Wanted List: Showcase photos and details of Los Santos' most wanted criminals, including descriptions, aliases, and any relevant information for public identification. (it is visible to public, no login required)
+Most Wanted List: Showcase photos and details of Los Santos' most wanted criminals,including descriptions, aliases, and any relevant information for public identification.(it is visible to public, no login required)
 Submit a Tip: Create a user-friendly interface for submitting anonymous crime tips.
 View News & Announcements: Logged in users can view the news and announcements posted by the department
 Likes: Users can like the news & announcements

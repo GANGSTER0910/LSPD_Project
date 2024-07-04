@@ -46,7 +46,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta]=None):
     encoded_jwt = jwt_instance.encode(to_encode, secret_key,alg= algorithm)
     return encoded_jwt
 
-@app.post("/users")
+@app.post("/user")
 async def create_user(user : User):
     user_dict = user.model_dump()
     expire_timedelta = timedelta(minutes=access_token_expire_time)
@@ -54,11 +54,11 @@ async def create_user(user : User):
     db1.get_collection('User').insert_one(user_dict)
     return user_token
 
-@app.get("/users/list", response_model= List[User])
-async def get_user():
-    user = db1.get_collection('User').find()
-    return [User(**i) for i in user]
-
+@app.get("/users/user", response_model= List[User])
+async def get_user(email:str, password:str):
+    user = db1.get_collection('User').find_one({"email":email, "password":password})
+    return [user]
+    # return user
 @app.post("/most_wanted_person")
 async def add_most_Wanted_person(user : Most_Wanted):
     most_wanted_per = user.model_dump()

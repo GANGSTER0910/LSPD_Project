@@ -16,7 +16,7 @@ const Loginsingup = () => {
     
     const handleSubmit = async () => {
         try {
-            const response = await fetch('http://localhost:8000/users', {
+            const response = await fetch('http://localhost:8000/user', {
                 method: 'POST',
                 mode: 'cors',
                 headers: {
