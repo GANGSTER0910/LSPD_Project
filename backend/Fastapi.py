@@ -1,6 +1,7 @@
 from pymongo import *
 from fastapi import *
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from typing import *
 from schema import *
 import jwt
@@ -8,6 +9,7 @@ from jwt import JWT, jwk_from_dict
 from datetime import *
 from jwt.exceptions import JWSDecodeError
 from typing import Optional
+from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordBearer
 
 app = FastAPI()
@@ -31,6 +33,9 @@ db1 = client1['LSPD']
 Secret_key = "6TpmJhN0YzMEmgF_01F7Dpbg42_YBM7yg5oUCjOTukKSCUExzwBOSpz8SSs7AVC3PNHG1tjsdtBqhDPbzUS6tg"
 algorithm = 'HS256'
 access_token_expire_time = 30
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated= "auto")
+def get_password_hash(password):
+    return pwd_context.hash(password)
 def create_access_token(data: dict, expires_delta: Optional[timedelta]=None):
     to_encode = data.copy()
     jwt_instance = JWT()
@@ -45,20 +50,37 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta]=None):
     to_encode.update({"exp":expire.isoformat()})
     encoded_jwt = jwt_instance.encode(to_encode, secret_key,alg= algorithm)
     return encoded_jwt
+def create_cookie(token:str):
+    # content = {}
+    response = JSONResponse(content= "Thank You! Succesfully Completed ")
+    response.set_cookie(key="session", value=token,httponly=True,max_age=1800)
+    return response
+def verify_password(plain_password, hashed_password):
+    return pwd_context.verify(plain_password, hashed_password)
 
 @app.post("/user")
 async def create_user(user : User):
     user_dict = user.model_dump()
+    user_dict["password"] = get_password_hash(user_dict["password"])
     expire_timedelta = timedelta(minutes=access_token_expire_time)
     user_token = create_access_token(user_dict,expire_timedelta)
     db1.get_collection('User').insert_one(user_dict)
-    return user_token
+    return create_cookie(user_token)
 
-@app.get("/users/user", response_model= List[User])
-async def get_user(email:str, password:str):
-    user = db1.get_collection('User').find_one({"email":email, "password":password})
-    return [user]
-    # return user
+@app.post("/users/login", response_model= List[User])
+async def get_user(user: User_login):
+    try:
+        user1 = db1.get_collection('User').find_one({"email":user.email},{"_id":0})
+        print(user1)
+    except:
+        raise HTTPException(401, "Inncorect Username ot Password")
+    if not verify_password(user.password, user1["password"]):
+        return False
+    expire_timedelta = timedelta(minutes=access_token_expire_time)
+    user_token = create_access_token(user1,expire_timedelta)
+    return create_cookie(user_token)  
+    # return [user]
+
 @app.post("/most_wanted_person")
 async def add_most_Wanted_person(user : Most_Wanted):
     most_wanted_per = user.model_dump()

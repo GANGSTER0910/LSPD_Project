@@ -7,12 +7,13 @@ class User(BaseModel):
     email : str
     password : str
     role : Optional[str] = "user"
-
+class User_login(BaseModel):
+    email : str
+    password: str
 class Most_Wanted(BaseModel):
     name : str
     alais : Optional[str] = None
     description : str
-    photo : str
 
 class Tip(BaseModel):
     description : str
