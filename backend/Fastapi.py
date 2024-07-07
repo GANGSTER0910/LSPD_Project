@@ -60,12 +60,15 @@ def verify_password(plain_password, hashed_password):
 
 @app.post("/user")
 async def create_user(user : User):
-    user_dict = user.model_dump()
-    user_dict["password"] = get_password_hash(user_dict["password"])
-    expire_timedelta = timedelta(minutes=access_token_expire_time)
-    user_token = create_access_token(user_dict,expire_timedelta)
-    db1.get_collection('User').insert_one(user_dict)
-    return create_cookie(user_token)
+    try:
+        user_dict = user.model_dump()
+        user_dict["password"] = get_password_hash(user_dict["password"])
+        expire_timedelta = timedelta(minutes=access_token_expire_time)
+        user_token = create_access_token(user_dict,expire_timedelta)
+        db1.get_collection('User').insert_one(user_dict)
+        return create_cookie(user_token)
+    except:
+        raise HTTPException(400)
 
 @app.post("/users/login", response_model= List[User])
 async def get_user(user: User_login):
@@ -75,7 +78,7 @@ async def get_user(user: User_login):
     except:
         raise HTTPException(401, "Inncorect Username ot Password")
     if not verify_password(user.password, user1["password"]):
-        return False
+        raise HTTPException(401, "Inncorrect Username or Password")
     expire_timedelta = timedelta(minutes=access_token_expire_time)
     user_token = create_access_token(user1,expire_timedelta)
     return create_cookie(user_token)  
