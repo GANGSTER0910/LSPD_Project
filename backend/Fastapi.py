@@ -1,3 +1,5 @@
+import os
+from dotenv import load_dotenv, dotenv_values
 from pymongo import *
 from fastapi import *
 from fastapi.middleware.cors import CORSMiddleware
@@ -13,7 +15,7 @@ from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordBearer
 
 app = FastAPI()
-    
+load_dotenv()
 origins = [
     "http://localhost:3000"
 ]    
@@ -26,13 +28,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-client1 = MongoClient("mongodb+srv://harshpanchal0910:edmJPEiESrbswYYh@lspd.ffxzjfm.mongodb.net/?retryWrites=true&w=majority&appName=LSPD")
+link = os.getenv("DataBase_Link")
+client1 = MongoClient(link)
 db1 = client1['LSPD']
-
-Secret_key = "6TpmJhN0YzMEmgF_01F7Dpbg42_YBM7yg5oUCjOTukKSCUExzwBOSpz8SSs7AVC3PNHG1tjsdtBqhDPbzUS6tg"
-algorithm = 'HS256'
-access_token_expire_time = 30
+Secret_key = os.getenv("SECRET_KEY")
+algorithm = os.getenv("Alogrithm")
+access_token_expire_time = int(os.getenv("Access_Token_Expire_Time"))
+print(type(access_token_expire_time))
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated= "auto")
 def get_password_hash(password):
     return pwd_context.hash(password)
