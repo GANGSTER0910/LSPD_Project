@@ -9,10 +9,8 @@ from schema import *
 import jwt
 from jwt import JWT, jwk_from_dict
 from datetime import *
-from jwt.exceptions import JWSDecodeError
 from typing import Optional
 from passlib.context import CryptContext
-from fastapi.security import OAuth2PasswordBearer
 
 app = FastAPI()
 load_dotenv()
@@ -28,13 +26,14 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
 link = os.getenv("DataBase_Link")
 client1 = MongoClient(link)
 db1 = client1['LSPD']
 Secret_key = os.getenv("SECRET_KEY")
 algorithm = os.getenv("Alogrithm")
 access_token_expire_time = int(os.getenv("Access_Token_Expire_Time"))
-print(type(access_token_expire_time))
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated= "auto")
 def get_password_hash(password):
     return pwd_context.hash(password)
@@ -52,13 +51,17 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta]=None):
     to_encode.update({"exp":expire.isoformat()})
     encoded_jwt = jwt_instance.encode(to_encode, secret_key,alg= algorithm)
     return encoded_jwt
+
+
 def create_cookie(token:str):
-    # content = {}
     response = JSONResponse(content= "Thank You! Succesfully Completed ")
     response.set_cookie(key="session", value=token,httponly=True,max_age=1800)
     return response
+
+
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
+
 
 @app.post("/user")
 async def create_user(user : User):
@@ -72,6 +75,7 @@ async def create_user(user : User):
     except:
         raise HTTPException(400)
 
+
 @app.post("/users/login", response_model= List[User])
 async def get_user(user: User_login):
     try:
@@ -84,7 +88,7 @@ async def get_user(user: User_login):
     expire_timedelta = timedelta(minutes=access_token_expire_time)
     user_token = create_access_token(user1,expire_timedelta)
     return create_cookie(user_token)  
-    # return [user]
+   
 
 @app.post("/most_wanted_person")
 async def add_most_Wanted_person(user : Most_Wanted):
@@ -92,10 +96,12 @@ async def add_most_Wanted_person(user : Most_Wanted):
     db1.get_collection('Most_Wanted').insert_one(most_wanted_per)
     return user
 
+
 @app.get("/most_wanted_list")
 async def get_most_Wanted_list():
     most_wanted_list = db1.get_collection('Most_Wanted').find()
     return [Most_Wanted(**i) for i in most_wanted_list]
+
 
 @app.post("/tips")
 async def add_tip(tip: Tip):
@@ -103,10 +109,12 @@ async def add_tip(tip: Tip):
     db1.get_collection('Tip').insert_one(tip_add)
     return tip
 
+
 @app.get("/tips/list")
 async def get_all_tips():
     tip = db1.get_collection('Tip').find()
     return [Tip(**i) for i in tip]
+
 
 @app.post("/announcements")
 async def add_announcement(announce : Announcements):
@@ -114,10 +122,12 @@ async def add_announcement(announce : Announcements):
     db1.get_collection('Announcements').insert_one(announce_add)
     return announce
 
+
 @app.get("/announcements/list")
 async def get_announcement():
     announce = db1.get_collection('Announcements').find()
     return[Announcements(**i) for i in announce] 
+
 
 @app.post("/Jobs")
 async def add_job(job : Job):
@@ -125,14 +135,15 @@ async def add_job(job : Job):
     db1.get_collection('Job').insert_one(job_add)
     return job
 
+
 @app.get("/Jobs/list")
 async def get_job_listing():
     job = db1.get_collection('Job').find()
     return[Job(**i) for i in job] 
+
 
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
 
     
-# .\venv\Scripts\activate
