@@ -2,8 +2,11 @@ import os
 from dotenv import load_dotenv, dotenv_values
 from pymongo import *
 from fastapi import *
+from fastapi import Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from starlette.responses import RedirectResponse
+from starlette.middleware.base import BaseHTTPMiddleware
 from typing import *
 from schema import *
 import jwt
@@ -15,10 +18,20 @@ from passlib.context import CryptContext
 app = FastAPI()
 load_dotenv()
 origins = [
-    "http://localhost:3000"
+    "http://localhost:3000",
+    "http://localhost:3000/signup",
+    "http://localhost:3000/login",
 ]    
 
 
+@app.middleware("http")
+async def cookieChecker(request:Request, call_next):
+    session = request.cookies.get('session')
+    if session:
+        return RedirectResponse(url='http://localhost:3000')
+    response = await call_next(request)
+    return response   
+    
 app.add_middleware(
     CORSMiddleware,
     allow_origins= origins,
@@ -55,13 +68,20 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta]=None):
 
 def create_cookie(token:str):
     response = JSONResponse(content= "Thank You! Succesfully Completed ")
-    response.set_cookie(key="session", value=token,httponly=True,max_age=1800)
+    response.set_cookie(key="session", value=token,httponly=True,max_age=3600)
     return response
 
 
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
+@app.get('/checkAuthentication')
+async def check(request: Request):
+    session = request.cookies.get('session')
+    if session:
+        return Response(status_code=200)
+    else:
+        return Response(status_code=307)
 
 @app.post("/user")
 async def create_user(user : User):

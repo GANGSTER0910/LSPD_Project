@@ -4,21 +4,24 @@ import {useState} from "react";
 import { FaUser } from "react-icons/fa";
 import Slideshow from "../components/SlideShow";
 
-export default function SignIn(){
+export default function SignUp(){
+    const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("")
+    const [confirmPassword, setConfirmPassword] = useState("")
     const [role, setRole] = useState("user")
+    const [message, setMessage] = useState("");
 
     const handleSubmit = async () => {
         try {
-            console.log(email, password, role);
-            const response = await fetch('http://localhost:8000/users/login', {
+            console.log(username, email, password, role);
+            const response = await fetch('http://localhost:8000/user', {
                 method: 'POST',
                 mode: 'cors',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({email, password}),
+                body: JSON.stringify({ username,email, password, role}),
             });
 
             if (!response.ok) {
@@ -26,6 +29,7 @@ export default function SignIn(){
             }
             const data = await response.json();
             console.log(data);
+            setMessage(data.message);
         } catch(err) {
             console.log(err);
         }
@@ -34,7 +38,20 @@ export default function SignIn(){
         <div className="w-full h-screen flex flex-col justify-center bg-transparent">
             <Slideshow/>
             <div className="border-fuchsia-200 shadow-lg shadow-fuchsia-400 rounded-lg w-1/3 mx-auto p-6 px-6 flex flex-col gap-y-4 items-center bg-black text-white">
-                <p className="text-3xl font-bold font-anton text-fuchsia-600">Sign In</p>
+                <p className="text-3xl font-bold font-anton text-fuchsia-600">Sign Up</p>
+                <div className="flex items-center gap-x-2 w-full">
+                    <div className="w-10 flex justify-center">
+                        <FaUser size={25}/>
+                    </div>
+                    <input
+                        name="username"
+                        type="text"
+                        placeholder='Username'
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        className="text-black font-bold w-full border-2 rounded-md px-2 py-1"
+                    />
+                </div>
                 <div className="flex items-center gap-x-2 w-full">
                     <div className="w-10 flex justify-center">
                         <IoMdMail size={30}/>
@@ -75,15 +92,28 @@ export default function SignIn(){
                         className="text-black font-bold w-full border-2 rounded-md px-2 py-1"
                     />
                 </div>
+                <div className="flex items-center gap-x-2 w-full">
+                    <div className="w-10 flex justify-center">
+                        <RiLockPasswordFill size={30}/>
+                    </div>
+                    <input
+                        name="confirmPass"
+                        type="password"
+                        placeholder='Confirm Password'
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        className="text-black font-bold w-full border-2 rounded-md px-2 py-1"
+                    />
+                </div>
                 <button
                     className="border-2 w-32 py-2 rounded-md glow-on-hover"
-                    disabled={email === "" || password === ""}
+                    disabled={confirmPassword !== password || confirmPassword === "" || password === ""}
                     onClick={(e) => {
                         e.preventDefault();
                         handleSubmit();
                     }}
                 >
-                    Sign In
+                    Sign Up
                 </button>
             </div>
         </div>
