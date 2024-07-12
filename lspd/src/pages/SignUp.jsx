@@ -3,6 +3,7 @@ import { RiLockPasswordFill } from "react-icons/ri";
 import {useState} from "react";
 import { FaUser } from "react-icons/fa";
 import Slideshow from "../components/SlideShow";
+import { useNavigate } from "react-router-dom";
 
 export default function SignUp(){
     const [username, setUsername] = useState("");
@@ -12,6 +13,7 @@ export default function SignUp(){
     const [role, setRole] = useState("user")
     const [message, setMessage] = useState("");
 
+    const navigate = useNavigate();
     const handleSubmit = async () => {
         try {
             console.log(username, email, password, role);
@@ -22,14 +24,13 @@ export default function SignUp(){
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ username,email, password, role}),
+                credentials: "include",
             });
 
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-            const data = await response.json();
-            console.log(data);
-            setMessage(data.message);
+            navigate('/login');
         } catch(err) {
             console.log(err);
         }
@@ -115,6 +116,9 @@ export default function SignUp(){
                 >
                     Sign Up
                 </button>
+                <div className="w-full text-end">
+                    Already have an account? <span className="text-blue-500 font-bold cursor-pointer" onClick={() => {navigate('/login')}}>Sign In</span>
+                </div>
             </div>
         </div>
     )

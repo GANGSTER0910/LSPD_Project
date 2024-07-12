@@ -1,15 +1,19 @@
 from pydantic import BaseModel, Field
-# from bson import ObjectId
 from typing import Optional
-# from database import *
+
 class User(BaseModel):
     username : str
     email : str
     password : str
     role : Optional[str] = "user"
+
 class User_login(BaseModel):
     email : str
     password: str
+    
+class User_list(BaseModel):
+    role : str
+
 class Most_Wanted(BaseModel):
     name : str
     alais : Optional[str] = None
@@ -28,10 +32,4 @@ class Job(BaseModel):
     description:str
     requirements: str
     application_procedure : str
-
-
-# async def start_mongodb():
-#     client1 = pymongo.MongoClient("mongodb://localhost:27017/")
-#     db1 = client1['LSPD']
-#     return "connected"
 

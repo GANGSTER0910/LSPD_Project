@@ -3,12 +3,13 @@ import { RiLockPasswordFill } from "react-icons/ri";
 import {useState} from "react";
 import { FaUser } from "react-icons/fa";
 import Slideshow from "../components/SlideShow";
+import { useNavigate } from "react-router-dom";
 
 export default function SignIn(){
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("")
     const [role, setRole] = useState("user")
-
+    const navigate = useNavigate();
     const handleSubmit = async () => {
         try {
             console.log(email, password, role);
@@ -19,6 +20,7 @@ export default function SignIn(){
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({email, password}),
+                credentials:"include"
             });
 
             if (!response.ok) {
@@ -26,6 +28,7 @@ export default function SignIn(){
             }
             const data = await response.json();
             console.log(data);
+            navigate('/home')
         } catch(err) {
             console.log(err);
         }
@@ -85,6 +88,9 @@ export default function SignIn(){
                 >
                     Sign In
                 </button>
+                <div className="w-full text-end">
+                    Create a New account? <span className="text-blue-500 font-bold cursor-pointer" onClick={() => {navigate('/signup')}}>Sign Up</span>
+                </div>
             </div>
         </div>
     )

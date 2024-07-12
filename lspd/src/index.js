@@ -9,11 +9,13 @@ import {
 } from "react-router-dom";
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
+import HomePage from './pages/HomePage';
 
 const router = createBrowserRouter([
+
   {
     path: "/",
-    element: <div>Home Page</div>,
+    element: <HomePage/>,
   },
   {
     path: "/login",

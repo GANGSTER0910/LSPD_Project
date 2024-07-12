@@ -19,18 +19,9 @@ app = FastAPI()
 load_dotenv()
 origins = [
     "http://localhost:3000",
-    "http://localhost:3000/signup",
     "http://localhost:3000/login",
-]    
-
-
-@app.middleware("http")
-async def cookieChecker(request:Request, call_next):
-    session = request.cookies.get('session')
-    if session:
-        return RedirectResponse(url='http://localhost:3000')
-    response = await call_next(request)
-    return response   
+    "http://localhost:3000/signup",
+    "http://localhost:3000/home"]    
     
 app.add_middleware(
     CORSMiddleware,
@@ -40,7 +31,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 link = os.getenv("DataBase_Link")
 client1 = MongoClient(link)
 db1 = client1['LSPD']
@@ -48,8 +38,10 @@ Secret_key = os.getenv("SECRET_KEY")
 algorithm = os.getenv("Alogrithm")
 access_token_expire_time = int(os.getenv("Access_Token_Expire_Time"))
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated= "auto")
+
 def get_password_hash(password):
     return pwd_context.hash(password)
+
 def create_access_token(data: dict, expires_delta: Optional[timedelta]=None):
     to_encode = data.copy()
     jwt_instance = JWT()
@@ -63,44 +55,43 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta]=None):
         expire = datetime.utcnow() + timedelta(minutes=15)
     to_encode.update({"exp":expire.isoformat()})
     encoded_jwt = jwt_instance.encode(to_encode, secret_key,alg= algorithm)
+    print(encoded_jwt)
     return encoded_jwt
-
 
 def create_cookie(token:str):
     response = JSONResponse(content= "Thank You! Succesfully Completed ")
-    response.set_cookie(key="session", value=token,httponly=True,max_age=3600)
+    response.set_cookie(key="session",value=token,httponly=True,secure=True, samesite='none',max_age=3600)
     return response
-
 
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
-@app.get('/checkAuthentication')
+@app.post('/checkAuthentication')
 async def check(request: Request):
     session = request.cookies.get('session')
+    print(session )
     if session:
-        return Response(status_code=200)
+        return JSONResponse(status_code=200, content={"message": "Authenticated"})
     else:
-        return Response(status_code=307)
+        return JSONResponse(status_code=307, content={"message": "Cookie Not Found"})
 
 @app.post("/user")
 async def create_user(user : User):
     try:
         user_dict = user.model_dump()
         user_dict["password"] = get_password_hash(user_dict["password"])
-        expire_timedelta = timedelta(minutes=access_token_expire_time)
-        user_token = create_access_token(user_dict,expire_timedelta)
+        # expire_timedelta = timedelta(minutes=access_token_expire_time)
+        # user_token = create_access_token(user_dict,expire_timedelta)
         db1.get_collection('User').insert_one(user_dict)
-        return create_cookie(user_token)
+        # return create_cookie(user_token)
+        return "Succesfully"
     except:
         raise HTTPException(400)
-
 
 @app.post("/users/login", response_model= List[User])
 async def get_user(user: User_login):
     try:
         user1 = db1.get_collection('User').find_one({"email":user.email},{"_id":0})
-        print(user1)
     except:
         raise HTTPException(401, "Inncorect Username ot Password")
     if not verify_password(user.password, user1["password"]):
@@ -109,6 +100,10 @@ async def get_user(user: User_login):
     user_token = create_access_token(user1,expire_timedelta)
     return create_cookie(user_token)  
    
+@app.post("/list")
+async def get_list(role:User_list):
+    user_list = db1.get_collection('User').find({"role":role.role})
+    return[User(**i) for i in user_list ]
 
 @app.post("/most_wanted_person")
 async def add_most_Wanted_person(user : Most_Wanted):
@@ -116,12 +111,10 @@ async def add_most_Wanted_person(user : Most_Wanted):
     db1.get_collection('Most_Wanted').insert_one(most_wanted_per)
     return user
 
-
 @app.get("/most_wanted_list")
 async def get_most_Wanted_list():
     most_wanted_list = db1.get_collection('Most_Wanted').find()
     return [Most_Wanted(**i) for i in most_wanted_list]
-
 
 @app.post("/tips")
 async def add_tip(tip: Tip):
@@ -129,12 +122,10 @@ async def add_tip(tip: Tip):
     db1.get_collection('Tip').insert_one(tip_add)
     return tip
 
-
 @app.get("/tips/list")
 async def get_all_tips():
     tip = db1.get_collection('Tip').find()
     return [Tip(**i) for i in tip]
-
 
 @app.post("/announcements")
 async def add_announcement(announce : Announcements):
@@ -142,12 +133,10 @@ async def add_announcement(announce : Announcements):
     db1.get_collection('Announcements').insert_one(announce_add)
     return announce
 
-
 @app.get("/announcements/list")
 async def get_announcement():
     announce = db1.get_collection('Announcements').find()
     return[Announcements(**i) for i in announce] 
-
 
 @app.post("/Jobs")
 async def add_job(job : Job):
@@ -155,15 +144,12 @@ async def add_job(job : Job):
     db1.get_collection('Job').insert_one(job_add)
     return job
 
-
 @app.get("/Jobs/list")
 async def get_job_listing():
     job = db1.get_collection('Job').find()
     return[Job(**i) for i in job] 
 
-
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
-
     
