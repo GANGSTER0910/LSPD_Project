@@ -1,13 +1,13 @@
 // import logo from './logo.svg';
 import './App.css';
-import LoginSignup from './components/LoginSignup/Loginsingup.jsx';
-import SignIn from './pages/SignIn.jsx';
-
+import {Button} from "@nextui-org/button";
+import {Avatar, AvatarGroup, AvatarIcon} from "@nextui-org/avatar";
 function App() {
   return (
     <div>
-      {/* <LoginSignup /> */}
-      <SignIn/>
+      <Button className="bg-green-400">Signin</Button>
+      <Avatar isBordered className='bg-cyan-500'/> 
+      <Avatar name="Junior" className='bg-cyan-500'/>
     </div>
   );
 }

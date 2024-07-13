@@ -10,11 +10,16 @@ import {
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import HomePage from './pages/HomePage';
+import AdminControl from './pages/AdminControl';
+import {NextUIProvider} from "@nextui-org/react";
 
 const router = createBrowserRouter([
-
   {
     path: "/",
+    element: <App/>,
+  },
+  {
+    path: "/home",
     element: <HomePage/>,
   },
   {
@@ -25,12 +30,16 @@ const router = createBrowserRouter([
     path: "/signup",
     element: <SignUp/>,
   },
+  {
+    path: "/admin",
+    element: <AdminControl/>,
+  },
 ]);
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
+  <NextUIProvider>
     <RouterProvider router={router} />
-  </React.StrictMode>
+  </NextUIProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function
