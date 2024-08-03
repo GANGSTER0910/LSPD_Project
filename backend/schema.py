@@ -10,26 +10,51 @@ class User(BaseModel):
 class User_login(BaseModel):
     email : str
     password: str
-    
+
+class admin(BaseModel):
+    img:str
+    name: str
+    email:str
+    role:str
+    password: str
+        
 class User_list(BaseModel):
     role : str
 
 class Most_Wanted(BaseModel):
     name : str
-    alais : Optional[str] = None
+    img: str
     description : str
+    duration:str
+    age:int
+    dob: str
+    city: str
+    rank:int
+    commited:str
+    sex:str
+    height:float
 
 class Tip(BaseModel):
+    # title: Optional[str] =None
     description : str
+    name : str 
+    against: str
+    header : str
     
 class Announcements(BaseModel):
     title: str
     content : str
-    like : Optional[int] = 0
+    img : str
+    # like : Optional[int] = 0
+    by : str
 
 class Job(BaseModel):
-    position: str
-    description:str
+    title:str
+    vacancy:int
     requirements: str
-    application_procedure : str
+    status: str
+    department: str
+    salary: int
+    description: str
+    deadline: str
 

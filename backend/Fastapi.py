@@ -3,6 +3,7 @@ from dotenv import load_dotenv, dotenv_values
 from pymongo import *
 from fastapi import *
 from fastapi import Request
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from starlette.responses import RedirectResponse
@@ -10,18 +11,24 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from typing import *
 from schema import *
 import jwt
+from bson import ObjectId
 from jwt import JWT, jwk_from_dict
 from datetime import *
+import shutil
 from typing import Optional
 from passlib.context import CryptContext
 
 app = FastAPI()
+images_dir = os.path.abspath("D:\\LSPD_Project\\backend\\images")
+app.mount("/images", StaticFiles(directory=images_dir), name="images")
 load_dotenv()
 origins = [
     "http://localhost:3000",
     "http://localhost:3000/login",
     "http://localhost:3000/signup",
-    "http://localhost:3000/home"]    
+    "http://localhost:3000/home",
+    "http://localhost:5173",
+    ]    
     
 app.add_middleware(
     CORSMiddleware,
@@ -63,6 +70,10 @@ def create_cookie(token:str):
     response.set_cookie(key="session",value=token,httponly=True,secure=True, samesite='none',max_age=3600)
     return response
 
+def getcookie(token:str):
+    response = JSONResponse(content="Admin Login Succesfully")
+    response.get
+
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
@@ -87,7 +98,28 @@ async def create_user(user : User):
         return "Succesfully"
     except:
         raise HTTPException(400)
-
+@app.post("/admin")
+async def create_admin(name:str = Form(...),email:str = Form(...),password:str = Form(...), file: UploadFile = File(...)):
+    try:
+        file_location = os.path.join(images_dir, file.filename)
+        with open(file_location, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+        
+        password = get_password_hash(password)   
+        user_dict ={
+            "name":name,
+            "email":email,
+            "password":password,
+            "role":"admin",
+            "img":file.filename
+        }
+        # expire_timedelta = timedelta(minutes=access_token_expire_time)
+        # user_token = create_access_token(user_dict,expire_timedelta)
+        db1.get_collection('Admin').insert_one(user_dict)
+        # return create_cookie(user_token)
+        return "Succesfully"
+    except:
+        raise HTTPException(400)
 @app.post("/users/login", response_model= List[User])
 async def get_user(user: User_login):
     try:
@@ -102,14 +134,40 @@ async def get_user(user: User_login):
    
 @app.post("/list")
 async def get_list(role:User_list):
-    user_list = db1.get_collection('User').find({"role":role.role})
-    return[User(**i) for i in user_list ]
+    user_list = db1.get_collection('Admin').find({"role":role.role})
+    return[admin(**i) for i in user_list ]
 
 @app.post("/most_wanted_person")
-async def add_most_Wanted_person(user : Most_Wanted):
-    most_wanted_per = user.model_dump()
-    db1.get_collection('Most_Wanted').insert_one(most_wanted_per)
-    return user
+async def add_most_Wanted_person(name : str= Form(...),
+    description : str= Form(...),
+    duration:str= Form(...),
+    age:int= Form(...),
+    dob: str= Form(...),
+    city: str= Form(...),
+    rank:int= Form(...),
+    commited:str= Form(...),
+    sex:str= Form(...),
+    height:float= Form(...),file: UploadFile = File(...)):
+    file_location = os.path.join(images_dir, file.filename)
+    with open(file_location, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+    
+    most_wanted_per ={
+        "img" : file.filename,
+        "description":description,
+        "name" : name,
+        "duration":duration,
+        "age":age,
+        "dob": dob,
+        "city": city,
+        "rank":rank,
+        "commited":commited,
+        "sex":sex,
+        "height":height    
+    }
+    result = db1.get_collection('Most_Wanted').insert_one(most_wanted_per)
+    most_wanted_per['_id'] = str(result.inserted_id)
+    return most_wanted_per
 
 @app.get("/most_wanted_list")
 async def get_most_Wanted_list():
@@ -128,15 +186,28 @@ async def get_all_tips():
     return [Tip(**i) for i in tip]
 
 @app.post("/announcements")
-async def add_announcement(announce : Announcements):
-    announce_add = announce.model_dump()
-    db1.get_collection('Announcements').insert_one(announce_add)
-    return announce
-
-@app.get("/announcements/list")
-async def get_announcement():
-    announce = db1.get_collection('Announcements').find()
-    return[Announcements(**i) for i in announce] 
+async def add_announcement(title: str = Form(...),content: str = Form(...), by: str = Form(...),file: UploadFile = File(...)):
+    file_location = os.path.join(images_dir, file.filename)
+    with open(file_location, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+    announce_add = {
+        "title":title,
+        "content" : content,
+        "by":by,
+        "img": file.filename
+    }
+    result = db1.get_collection('Announcements').insert_one(announce_add)
+    announce_add['_id'] = str(result.inserted_id)
+    return announce_add
+ 
+@app.get("/announcements/list", response_model=List[Announcements])
+async def get_announcements():
+    announcements_cursor = db1.get_collection('Announcements').find()
+    announcements = []
+    for announce in announcements_cursor:
+        announce["_id"] = str(announce["_id"])  # Convert ObjectId to string
+        announcements.append(Announcements(**announce))
+    return announcements
 
 @app.post("/Jobs")
 async def add_job(job : Job):
