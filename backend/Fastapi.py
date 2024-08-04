@@ -25,6 +25,7 @@ load_dotenv()
 origins = [
     "http://localhost:3000",
     "http://localhost:3000/login",
+    "https://your-frontend-site.onrender.com",
     "http://localhost:3000/signup",
     "http://localhost:3000/home",
     "http://localhost:5173",
