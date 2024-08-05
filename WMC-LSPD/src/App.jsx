@@ -2,6 +2,7 @@ import Hero from "./components/Interface/Hero"
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import PublicOnlyRoute from "./utils/PublicOnlyRoute";
 import PrivateOnlyRoute from "./utils/PrivateOnlyRoute";
+import Adminonlyroute from "./utils/Adminonlyroute";
 import StationScreen from "./components/Station/StationScreen"
 import JailScreen from "./components/Jail/JailScreen";
 import OfficeScreen from "./components/Office/OfficeScreen";
@@ -43,7 +44,7 @@ const App = () => {
         <Route path="/" element={<PublicOnlyRoute Component={Hero} />} />
         <Route path="/station" element={<PublicOnlyRoute Component={StationScreen} />} />
         <Route path="/jail" element={<PrivateOnlyRoute Component={JailScreen} />} />
-        <Route path="/office" element={<PrivateOnlyRoute Component={OfficeScreen} />} />
+        <Route path="/office" element={<Adminonlyroute Component={OfficeScreen} />} />
         <Route path="/login" element={<PublicOnlyRoute Component={Login} />} />
         <Route path="/signup" element={<PublicOnlyRoute Component={Signup} />} />
       </Routes>

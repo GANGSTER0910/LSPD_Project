@@ -26,6 +26,7 @@ origins = [
     "http://localhost:3000",
     "http://localhost:3000/login",
     "https://your-frontend-site.onrender.com",
+    "https://lspd-project-git-main-gangster0910s-projects.vercel.app",
     "http://localhost:3000/signup",
     "http://localhost:3000/home",
     "http://localhost:5173",
@@ -66,14 +67,23 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta]=None):
     print(encoded_jwt)
     return encoded_jwt
 
+def decode_Access_token(token:str):
+    payload = JWT.decode(token, Secret_key,algorithms=algorithm)
+    username: str = payload.get("username")
+    role : str = payload.get("role")
+    if (username is None or role is None):
+        raise HTTPException(401)
+    token_data = {
+        "username" : username,
+        "role" : role
+    }
+    return token_data
+
 def create_cookie(token:str):
     response = JSONResponse(content= "Thank You! Succesfully Completed ")
     response.set_cookie(key="session",value=token,httponly=True,secure=True, samesite='none',max_age=3600)
     return response
 
-def getcookie(token:str):
-    response = JSONResponse(content="Admin Login Succesfully")
-    response.get
 
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
@@ -81,7 +91,8 @@ def verify_password(plain_password, hashed_password):
 @app.post('/checkAuthentication')
 async def check(request: Request):
     session = request.cookies.get('session')
-    print(session )
+    decode_Access_token(session)
+    print(session)
     if session:
         return JSONResponse(status_code=200, content={"message": "Authenticated"})
     else:
@@ -128,6 +139,18 @@ async def get_user(user: User_login):
     except:
         raise HTTPException(401, "Inncorect Username ot Password")
     if not verify_password(user.password, user1["password"]):
+        raise HTTPException(401, "Inncorrect Username or Password")
+    expire_timedelta = timedelta(minutes=access_token_expire_time)
+    user_token = create_access_token(user1,expire_timedelta)
+    return create_cookie(user_token)  
+   
+@app.post("/admin/login",response_model=List[admin])
+async def get_admin(admin:User_login):
+    try:
+        user1 = db1.get_collection('Admin').find_one({"email":admin.email},{"_id":0})
+    except:
+        raise HTTPException(401, "Inncorect Username ot Password")
+    if not verify_password(admin.password, user1["password"]):
         raise HTTPException(401, "Inncorrect Username or Password")
     expire_timedelta = timedelta(minutes=access_token_expire_time)
     user_token = create_access_token(user1,expire_timedelta)

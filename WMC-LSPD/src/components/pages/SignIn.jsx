@@ -19,7 +19,7 @@ export default function SignIn(){
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({email, password}),
+                body: JSON.stringify({email, password,role}),
                 credentials:"include"
             });
 
@@ -29,6 +29,7 @@ export default function SignIn(){
             const data = await response.json();
             console.log(data);
             navigate('/station')
+
         } catch(err) {
             console.log(err);
         }
