@@ -7,6 +7,8 @@ const NewsModal = ({ isOpen, onClose }) => {
   const [announcements, setAnnouncements] = useState([]);
   const [loading, setLoading] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
+  const [popupVisible, setPopupVisible] = useState(false);
+  const [navigate, setNavigate] = useState(false);
 
   useEffect(() => {
     const checkAuthentication = async () => {
@@ -24,11 +26,19 @@ const NewsModal = ({ isOpen, onClose }) => {
           setAuthenticated(true);
         } else {
           console.error("Authentication failed:", data.message);
-          onClose(); // Close the modal if not authenticated
+          setPopupVisible(true); // Show the popup
+          setTimeout(() => {
+            setPopupVisible(false);
+            setNavigate(true); // Set navigation to true after the popup
+          }, 3000); // Show the popup for 3 seconds
         }
       } catch (error) {
         console.error("Error checking authentication:", error);
-        onClose(); // Close the modal if there's an error
+        setPopupVisible(true); // Show the popup
+        setTimeout(() => {
+          setPopupVisible(false);
+          setNavigate(true); // Set navigation to true after the popup
+        }, 3000); // Show the popup for 3 seconds
       }
     };
 
@@ -64,9 +74,23 @@ const NewsModal = ({ isOpen, onClose }) => {
     }
   }, [isOpen, authenticated]);
 
+  useEffect(() => {
+    if (navigate) {
+      window.location.href = "/login"; // Navigate to the login page
+    }
+  }, [navigate]);
+
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 ">
+      {popupVisible && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 ">
+          <div className="absolute inset-0 bg-black opacity-50"></div>
+          <div className="bg-gray-200 p-4 rounded-2xl z-10">
+            <p>Authentication failed. Redirecting...</p>
+          </div>
+        </div>
+      )}
       <div onClick={onClose} className="absolute inset-0 bg-black opacity-50"></div>
       <div className=" bg-gray-200 w-[80%] h-[90%] z-10 flex justify-around items-center flex-col p-4 rounded-2xl">
         <div className=" w-full h-[7%] sm:h-[10%] mb-4 font-pricedown flex justify-end static bg-[#b392ac] rounded-2xl">
