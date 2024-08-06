@@ -28,6 +28,7 @@ origins = [
     "http://localhost:3000/login",
     "https://your-frontend-site.onrender.com",
     "https://lspd-project-git-main-gangster0910s-projects.vercel.app",
+    "https://lspd-project.vercel.app",
     "http://localhost:3000/signup",
     "http://localhost:3000/home",
     "http://localhost:5173",
