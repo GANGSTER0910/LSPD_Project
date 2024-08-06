@@ -12,7 +12,7 @@ from typing import *
 from schema import *
 import jwt
 from bson import ObjectId
-from jwt import JWT, jwk_from_dict
+from jwt import PyJWT
 from datetime import *
 import shutil
 from typing import Optional
@@ -51,34 +51,31 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated= "auto")
 def get_password_hash(password):
     return pwd_context.hash(password)
 
-def create_access_token(data: dict, expires_delta: Optional[timedelta]=None):
+def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()
-    jwt_instance = JWT()
-    secret_key = jwk_from_dict({
-        "k":Secret_key,
-        "kty":"oct"
-    })
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(minutes=15)
-    to_encode.update({"exp":expire.isoformat()})
-    encoded_jwt = jwt_instance.encode(to_encode, secret_key,alg= algorithm)
+        expire = datetime.utcnow() + timedelta(minutes=access_token_expire_time)
+    
+    encoded_jwt = jwt.encode(to_encode, Secret_key, algorithm=algorithm)
     print(encoded_jwt)
     return encoded_jwt
-
-def decode_Access_token(token:str):
-    payload = JWT.decode(token, Secret_key,algorithms=algorithm)
-    username: str = payload.get("username")
-    role : str = payload.get("role")
-    if (username is None or role is None):
-        raise HTTPException(401)
-    token_data = {
-        "username" : username,
-        "role" : role
-    }
-    return token_data
-
+def decode_Access_token(token: str):
+        payload = jwt.decode(token, Secret_key, algorithms=[algorithm])    
+        username: str = payload.get("username")
+        role: str = payload.get("role")
+        
+        if username is None or role is None:
+            raise HTTPException(status_code=401, detail="Invalid token data")
+        
+        token_data = {
+            "username": username,
+            "role": role
+        }
+        print(token_data)
+        return token_data
+   
 def create_cookie(token:str):
     response = JSONResponse(content= "Thank You! Succesfully Completed ")
     response.set_cookie(key="session",value=token,httponly=True,secure=True, samesite='none',max_age=3600)
@@ -91,22 +88,35 @@ def verify_password(plain_password, hashed_password):
 @app.post('/checkAuthentication')
 async def check(request: Request):
     session = request.cookies.get('session')
-    decode_Access_token(session)
     print(session)
     if session:
         return JSONResponse(status_code=200, content={"message": "Authenticated"})
     else:
         return JSONResponse(status_code=307, content={"message": "Cookie Not Found"})
 
+@app.post('/check/admin')
+async def check(request: Request):
+    try:
+        session = request.cookies.get('session')
+        
+        if session is None:
+            return JSONResponse(status_code=status.HTTP_307_TEMPORARY_REDIRECT, content={"message": "Cookie Not Found"})
+        print(session)
+        payload = jwt.decode(session, Secret_key, algorithms=[algorithm])
+        role : str = payload.get("role")
+        print(role)
+        if role == "admin":
+            return JSONResponse(status_code=status.HTTP_200_OK, content={"message": "Authenticated"}) 
+        else:
+            return JSONResponse(status_code=status.HTTP_307_TEMPORARY_REDIRECT,content={"message": "Not an Admin!!"})   
+    except HTTPException as e:
+        return JSONResponse(status_code=e.status_code, content={"message": e.detail})
 @app.post("/user")
 async def create_user(user : User):
     try:
         user_dict = user.model_dump()
         user_dict["password"] = get_password_hash(user_dict["password"])
-        # expire_timedelta = timedelta(minutes=access_token_expire_time)
-        # user_token = create_access_token(user_dict,expire_timedelta)
         db1.get_collection('User').insert_one(user_dict)
-        # return create_cookie(user_token)
         return "Succesfully"
     except:
         raise HTTPException(400)
@@ -125,25 +135,32 @@ async def create_admin(name:str = Form(...),email:str = Form(...),password:str =
             "role":"admin",
             "img":file.filename
         }
-        # expire_timedelta = timedelta(minutes=access_token_expire_time)
-        # user_token = create_access_token(user_dict,expire_timedelta)
         db1.get_collection('Admin').insert_one(user_dict)
-        # return create_cookie(user_token)
         return "Succesfully"
     except:
         raise HTTPException(400)
-@app.post("/users/login", response_model= List[User])
+@app.post("/users/login")
 async def get_user(user: User_login):
     try:
-        user1 = db1.get_collection('User').find_one({"email":user.email},{"_id":0})
-    except:
-        raise HTTPException(401, "Inncorect Username ot Password")
-    if not verify_password(user.password, user1["password"]):
-        raise HTTPException(401, "Inncorrect Username or Password")
-    expire_timedelta = timedelta(minutes=access_token_expire_time)
-    user_token = create_access_token(user1,expire_timedelta)
-    return create_cookie(user_token)  
-   
+        user1 = db1.get_collection('User').find_one({"email": user.email}, {"_id": 0})
+        if user1:
+            if not verify_password(user.password, user1.get("password", "")):
+                raise HTTPException(status_code=401, detail="Incorrect Username or Password")
+            expire_timedelta = timedelta(minutes=access_token_expire_time)
+            user_token = create_access_token(user1, expire_timedelta)
+            return create_cookie(user_token)
+
+        user2 = db1.get_collection('Admin').find_one({"email": user.email}, {"_id": 0})
+        if user2:
+            if not verify_password(user.password, user2.get("password", "")):
+                raise HTTPException(status_code=401, detail="Incorrect Username or Password")
+            expire_timedelta = timedelta(minutes=access_token_expire_time)
+            user_token = create_access_token(user2, expire_timedelta)
+            return create_cookie(user_token)
+
+        raise HTTPException(status_code=401, detail="Incorrect Username or Password")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
 @app.post("/admin/login",response_model=List[admin])
 async def get_admin(admin:User_login):
     try:
