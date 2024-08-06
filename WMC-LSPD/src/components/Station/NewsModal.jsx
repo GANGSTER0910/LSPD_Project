@@ -106,7 +106,7 @@ const NewsModal = ({ isOpen, onClose }) => {
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div className="absolute inset-0 bg-black opacity-50"></div>
           <div className="bg-gray-200 p-4 rounded-2xl z-10">
-            <p>Authentication failed. Redirecting...</p>
+            <p>Authentication failed. Login Required...</p>
           </div>
         </div>
       )}

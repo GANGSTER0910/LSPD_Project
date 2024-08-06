@@ -22,7 +22,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<PublicOnlyRoute Component={Hero} />} />
         <Route path="/station" element={<PublicOnlyRoute Component={StationScreen} />} />
-        <Route path="/jail" element={<PrivateOnlyRoute Component={JailScreen} />} />
+        <Route path="/jail" element={<PublicOnlyRoute Component={JailScreen} />} />
         <Route path="/office" element={<Adminonlyroute Component={OfficeScreen} />} />
         <Route path="/login" element={<PublicOnlyRoute Component={Login} />} />
         <Route path="/signup" element={<PublicOnlyRoute Component={Signup} />} />
