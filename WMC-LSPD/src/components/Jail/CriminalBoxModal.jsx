@@ -37,7 +37,7 @@ const CriminalBoxModal = ({
         </div>
         <div className="w-full h-[80%] flex lg:flex-row flex-col overflow-y-auto">
           <div className="lg:w-1/4 w-full h-fit flex p-2 justify-center items-center lg:mt-5 flex-col gap-2 lg:overflow-hidden">
-            <img className="w-[90%] h-[90%] rounded-2xl" src={imageUrlmg} alt="" />
+            <img className="w-[90%] h-[90%] rounded-2xl" src={imageUrl} alt="" />
             {/* {stars.map((_,index) =>{
               return(
                 <img key={index} className="w-[30px] h-[30px]" src={Star} alt={`Star ${index + 1}`} />
