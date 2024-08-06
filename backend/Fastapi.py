@@ -12,7 +12,7 @@ from typing import *
 from schema import *
 import jwt
 from bson import ObjectId
-from jwt import PyJWT
+# from jwt import PyJWT
 from datetime import *
 import shutil
 from typing import Optional
