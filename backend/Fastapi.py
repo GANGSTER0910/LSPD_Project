@@ -10,6 +10,7 @@ from starlette.responses import RedirectResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 from typing import *
 from schema import *
+# import subprocess
 import jwt
 from bson import ObjectId
 # from jwt import PyJWT
@@ -77,7 +78,7 @@ def decode_Access_token(token: str):
         }
         print(token_data)
         return token_data
-   
+
 def create_cookie(token:str):
     response = JSONResponse(content= "Thank You! Succesfully Completed ")
     response.set_cookie(key="session",value=token,httponly=True,secure=True, samesite='none',max_age=3600)
@@ -87,6 +88,10 @@ def create_cookie(token:str):
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
+# @app.get("/packages")
+# async def get_packages():
+#     result = subprocess.run(["pip", "freeze"], capture_output=True, text=True)
+#     return {"packages": result.stdout}
 @app.post('/checkAuthentication')
 async def check(request: Request):
     session = request.cookies.get('session')
