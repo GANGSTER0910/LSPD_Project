@@ -7,3 +7,12 @@
 2. change the directory to lspd
 3. Run "npm install"
 4. Start the project by "npm start"
+
+## Link:
+https://lspd-project.vercel.app
+
+## Screenshots
+
+
+
+## LSPD Portal
