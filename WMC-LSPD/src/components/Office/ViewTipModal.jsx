@@ -52,7 +52,7 @@ const ViewTipModal = ({ isOpen, onClose }) => {
         </div>
 
         <div className="w-[98%] h-[95%] justify-center flex-wrap flex text-2xl overflow-hidden overflow-y-auto lg:gap-4 md:gap-3 items-center pb-3 pt-2 pl-2 scroll-p-10">
-          {Tip.map((tip) => {
+          {tips.map((tip) => {
             return(
             <TipBox
               key={tip.header}

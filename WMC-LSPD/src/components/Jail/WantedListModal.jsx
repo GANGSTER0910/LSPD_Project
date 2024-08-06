@@ -48,7 +48,6 @@ const WantedListModal = ({ isOpen, onClose }) => {
     return counts;
   }, [wantedList]);
 
-  if (!isOpen) return null;
 
   if (!isOpen) return null;
   return (
