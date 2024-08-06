@@ -43,34 +43,30 @@ const ViewAdminModal = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 justify-center items-center flex z-30 font-technor">
-      <div onClick={onClose} className="absolute inset-0"></div>
-      <div className="w-[80%] h-[90%] bg-white p-4 rounded-lg flex flex-col gap-4 z-20">
-        <div className="w-full h-[10%] flex justify-end static bg-[#a8dadc] rounded-2xl">
-          <h2 className="text-black flex justify-center items-center w-full h-full text-4xl font-pricedown">
+      <div onClick={onClose} className="absolute inset-0 "></div>
+      <div className=" w-[80%] h-[90%] bg-white p-4 rounded-lg flex flex-col gap-4 z-20">
+        <div className=" w-full h-[10%] flex justify-end static bg-[#a8dadc] rounded-2xl">
+          <h2 className="text-black flex justify-center items-center w-full h-full text-2xl lg:text-4xl font-pricedown ">
             View Admin's
           </h2>
+
           <Button onClick={onClose}>
             <CloseIcon className="text-black" />
           </Button>
         </div>
-        <div className="w-full h-[90%] flex flex-wrap gap-4 justify-center items-start text-2xl overflow-y-auto overflow-hidden">
-          {loading ? (
-            <div>Loading...</div>
-          ) : (
-            data.length > 0 ? (
-              data.map((admin) => (
-                <AdminViewBox
-                  key={admin.email}  // Use a unique key, preferably not the name
-                  name={admin.name}
-                  email={admin.email}
-                  img={admin.img}
-                  // Add other props if needed
-                />
-              ))
-            ) : (
-              <div>No admins found</div>
-            )
-          )}
+
+        <div className="w-full h-[90%] flex flex-wrap gap-4  justify-center items-start text-2xl overflow-y-auto overflow-hidden">                                      
+          {Admin.map((admin) => {
+            return (
+              <AdminViewBox
+                key={admin.name}
+                name={admin.name}
+                email={admin.email}
+                img={admin.img}
+                // contact={admin.contact}
+              />
+            );
+          })}
         </div>
       </div>
     </div>

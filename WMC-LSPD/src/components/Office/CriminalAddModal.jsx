@@ -143,21 +143,25 @@ const CriminalAddModal = ({ isOpen, onClose }) => {
 
         <div className="w-full h-[90%] pl-6">
           <form
-            className="flex w-full h-full overflow-auto gap-6"
+            className="flex lg:flex-row flex-col w-full h-full overflow-auto  gap-6"
             onSubmit={handleSubmit}
           >
-            <div className="w-1/4 h-full">
-              <div className="flex justify-center w-full h-[60%]">
+            <div className="lg:w-1/4 lg:h-full h-1/4 w-full flex flex-col justify-center items-center gap-2 lg:gap-0">
+              <div className="flex justify-center lg:w-full w-[40%] h-[70%] lg:h-[60%]">
                 <label
                   htmlFor="file"
-                  className="cursor-pointer bg-gray-200 w-full p-8 rounded-2xl border-2 border-dashed border-gray-600 shadow-lg  items-center justify-center"
+                  className="cursor-pointer bg-gray-200 lg:w-full md:w-[70%] sm:w-[70%]  p-8 rounded-2xl border-2 border-dashed border-gray-600 shadow-lg  items-center justify-center"
                   onDragOver={handleDragOver}
                   onDrop={handleDrop}
                 >
                   <div className="flex h-[100%] flex-col items-center justify-center gap-2">
-                    <img className="w-[60%] h-[40%] " src={upload} alt="" />
+                    <img
+                      className="w-[60%] lg:h-[40%] h-[40%]"
+                      src={upload}
+                      alt=""
+                    />
                     {!formData.img && (
-                      <div className="flex h-[60%] justify-center flex-col items-center text-lg">
+                      <div className="flex h-[60%] justify-center flex-col items-center text-[0.7rem] lg:text-[1rem] lg:text-lg text-nowrap">
                         <p>Drag and Drop</p>
                         <p>or</p>
                       </div>
@@ -170,7 +174,7 @@ const CriminalAddModal = ({ isOpen, onClose }) => {
                       </div>
                     )}
 
-                    <span className="bg-gray-600 w-[70%] text-white px-4 p-2 rounded-lg transition duration-300 hover:bg-gray-800 flex justify-center items-center">
+                    <span className="bg-gray-600 lg:w-[70%] lg:text-[1rem] text-[0.8rem] text-nowrap  text-white px-4 p-2 rounded-lg transition duration-300 hover:bg-gray-800 flex justify-center items-center">
                       Browse file
                     </span>
                   </div>
@@ -184,7 +188,7 @@ const CriminalAddModal = ({ isOpen, onClose }) => {
                 </label>
               </div>
 
-              <div className="w-full h-[20%] flex justify-center gap-2 items-center">
+              <div className="lg:w-full w-[50%] h-[20%] flex justify-center gap-2 items-center">
                 <label className="text-md text-nowrap w-[20%] font-semibold">
                   Rank :-
                 </label>
@@ -200,9 +204,9 @@ const CriminalAddModal = ({ isOpen, onClose }) => {
                 />
               </div>
             </div>
-            <div className="w-3/4 h-full flex flex-col gap-2">
-              <div className="w-full flex h-3/5 gap-2">
-                <div className="w-1/2 flex flex-col h-full ">
+            <div className="lg:w-3/4 lg:h-full w-full h-3/4 flex flex-col gap-2">
+              <div className="w-full flex lg:flex-row gap-5 flex-col h-3/5 lg:gap-2">
+                <div className="lg:w-1/2 w-[80%] flex flex-col h-full gap-3 lg:gap-0 ">
                   <div className="flex w-full justify-center items-center gap-2 h-1/4 ">
                     <label className="text-sm text-nowrap w-[15%] font-semibold">
                       Name :-
@@ -264,7 +268,7 @@ const CriminalAddModal = ({ isOpen, onClose }) => {
                     />
                   </div>
                 </div>
-                <div className="w-1/2 flex flex-col h-full ">
+                <div className="lg:w-1/2 w-[80%] flex flex-col h-full gap-3 lg:gap-0">
                   <div className="flex w-full justify-center items-center gap-2 h-1/4 ">
                     <label className="text-sm text-nowrap w-[15%]  font-semibold">
                       City :-
@@ -326,36 +330,61 @@ const CriminalAddModal = ({ isOpen, onClose }) => {
                     />
                   </div>
                 </div>
+
+                <div className=" lg:hidden flex gap-2 justify-center items-center h-[27%]">
+                  <label className="text-lg font-semibold text-nowrap">
+                    Crime :-{" "}
+                  </label>
+                  <textarea
+                    name="crime"
+                    value={formData.crime}
+                    placeholder="Enter the Crime Committed"
+                    onChange={handleInputChange}
+                    className="p-2  border border-gray-400 w-full rounded-lg min-h-[90%] max-h-[90%] overflow-y-auto"
+                    rows="4"
+                    required
+                  />
+                </div>
+
+                <div className=" lg:hidden w-[99%] h-[10%] overflow-visible flex justify-center items-start">
+                  <button
+                    className="button font-poppins w-[15%] h-[70%] text-xl flex justify-center items-center"
+                    type="submit"
+                  >
+                    Submit
+                  </button>
+                </div>
               </div>
+
+              <div className=" hidden lg:flex gap-2 justify-center items-center h-[27%]">
+                  <label className="text-lg font-semibold text-nowrap">
+                    Crime :-{" "}
+                  </label>
+                  <textarea
+                    name="crime"
+                    value={formData.crime}
+                    placeholder="Enter the Crime Committed"
+                    onChange={handleInputChange}
+                    className="p-2  border border-gray-400 w-full rounded-lg min-h-[90%] max-h-[90%] overflow-y-auto"
+                    rows="4"
+                    required
+                  />
+                </div>
+
+                <div className=" hidden  w-[99%] h-[10%] overflow-visible lg:flex justify-center items-start">
+                  <button
+                    className="button font-poppins w-[15%] h-[70%] text-xl flex justify-center items-center"
+                    type="submit"
+                  >
+                    Submit
+                  </button>
+                </div>
               {/* <Button
                 type="submit"
                 className="self-end mt-4 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
               >
                 Submit
               </Button> */}
-
-              <div className="flex gap-2 justify-center items-center h-[27%]">
-                <label className="text-lg font-semibold text-nowrap">
-                  Crime :-{" "}
-                </label>
-                <textarea
-                  name="crime"
-                  value={formData.crime}
-                  placeholder="Enter the Crime Committed"
-                  onChange={handleInputChange}
-                  className="p-2  border border-gray-400 w-full rounded-lg min-h-[90%] max-h-[90%] overflow-y-auto"
-                  rows="4"
-                  required
-                />
-              </div>
-              <div className=" w-[99%] h-[10%] overflow-visible flex justify-center items-start">
-                <button
-                  className="button font-poppins w-[15%] h-[70%] text-xl flex justify-center items-center"
-                  type="submit"
-                >
-                  Submit
-                </button>
-              </div>
             </div>
           </form>
         </div>

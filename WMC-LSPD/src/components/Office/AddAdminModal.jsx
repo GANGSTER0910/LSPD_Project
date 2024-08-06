@@ -74,11 +74,11 @@ const AddAdminModal = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
   return (
-    <div className="fixed inset-0 justify-center items-center flex z-30 font-technor">
+    <div className="fixed inset-0 justify-center items-center flex z-30 font-technor h-screen w-screen">
       <div onClick={handleClose} className="absolute inset-0  "></div>
       <div className=" w-[80%] h-[90%] bg-white p-4 rounded-lg flex flex-col gap-4 z-20 shadow-lg">
-        <div className=" w-full h-[10%] flex justify-end static items-center bg-[#a8dadc] rounded-2xl">
-          <h2 className="text-black flex justify-center items-center w-full h-full text-4xl font-pricedown ">
+        <div className=" w-full h-[7%] lg:h-[10%] flex justify-end static items-center bg-[#a8dadc] rounded-2xl">
+          <h2 className="text-black flex justify-center items-center w-full h-full text-2xl lg:text-4xl font-pricedown ">
             Add Admin
           </h2>
 
@@ -89,22 +89,22 @@ const AddAdminModal = ({ isOpen, onClose }) => {
 
         <div className="w-full h-[90%] p-6">
           <form
-            className="flex w-full h-full overflow-auto gap-6"
+            className="flex lg:flex-row flex-col w-full h-full lg:gap-6"
             onSubmit={handleSubmit}
           >
-            <div className="w-1/4 h-full">
-              <div className="flex justify-center w-full h-[60%]">
+            <div className="w-full h-1/4 lg:h-full lg:w-1/4">
+              <div className="flex justify-center w-full h-full  lg:h-[60%]">
                 <label
                   htmlFor="file"
-                  className="cursor-pointer bg-gray-200 w-full p-8 rounded-2xl border-2 border-dashed border-gray-600 shadow-lg   items-center justify-center"
+                  className="cursor-pointer bg-gray-200 md:h-full lg:w-full md:w-[50%] w-[70%] p-8 rounded-2xl border-2 border-dashed border-gray-600 shadow-lg   items-center justify-center"
                   onDragOver={handleDragOver}
                   onDrop={handleDrop}
                 >
                   <div className="flex h-[100%] flex-col items-center justify-center gap-2">
-                    <img className="w-[60%] h-[40%] " src={upload} alt="" />
+                    <img className="lg:w-[60%] lg:h-[40%] w-[50%] h-[30%] " src={upload} alt="" />
                     {!adminData.img && (
-                      <div className="flex h-[60%] justify-center flex-col items-center text-lg">
-                        <p>Drag and Drop</p>
+                      <div className="flex lg:h-[60%] h-[40%] justify-center flex-col items-center text-lg">
+                        <p className="text-nowrap">Drag and Drop</p>
                         <p>or</p>
                       </div>
                     )}
@@ -116,7 +116,7 @@ const AddAdminModal = ({ isOpen, onClose }) => {
                       </div>
                     )}
 
-                    <span className="bg-gray-600 w-[70%] text-white px-4 p-2 rounded-lg transition duration-300 hover:bg-gray-800 flex justify-center items-center">
+                    <span className="bg-gray-600 lg:w-[70%] md:w-[55%] sm:w-[55%] w-[70%] text-white px-4 p-2 rounded-lg transition duration-300 hover:bg-gray-800 flex justify-center items-center text-sm text-nowrap" >
                       Browse file
                     </span>
                   </div>
@@ -130,7 +130,7 @@ const AddAdminModal = ({ isOpen, onClose }) => {
                 </label>
               </div>
             </div>
-            <div className="w-3/4 h-full flex flex-col gap-2">
+            <div className="lg:w-3/4 lg:h-full h-3/4 w-full flex flex-col gap-2 ">
               <div className="flex flex-col gap-2 h-[25%]">
                 <label className="text-lg font-semibold">Name</label>
                 <input
@@ -168,10 +168,9 @@ const AddAdminModal = ({ isOpen, onClose }) => {
                   required
                 />
               </div>
-
               <div className="w-[99%] h-[10%] overflow-visible flex justify-center items-start mt-5">
                 <button
-                  className="button w-[15%] h-[70%] text-xl flex justify-center items-center"
+                  className="button lg:w-[15%] md:w-[30%] sm:w-[40%] w-[70%] h-[70%] text-xl flex justify-center items-center"
                   type="submit"
                 >
                   Submit

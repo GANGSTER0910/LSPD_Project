@@ -41,9 +41,10 @@ const WantedBox = ({
     <>
       {!isCriminalBoxOpen ? (
         <div
+          // Key={key}
           onClick={handleClick}
           style={{ backgroundImage: `url(${isBg})` }}
-          className="static bg-cover sm:w-[48%] w-[96%] h-[10%] sm:h-[20%] bg-black rounded-xl text-white flex justify-between items-center"
+          className="static bg-cover lg:w-[48%] sm:w-[80%] md:w-[48%] w-[96%] h-[13%]  md:h-[13%] lg:h-[20%] bg-black rounded-xl text-white flex justify-between items-center"
         >
           <div className="w-1/4 h-full flex justify-center items-center ml-2">
             <img
@@ -52,9 +53,9 @@ const WantedBox = ({
               alt={criminalName}
             />
           </div>
-          <div className="sm:w-[70%] w-[65%] h-[90%] bg-white z-50 text-black flex rounded-md mr-2 pr-1 pt-1">
-            <div className="w-1/2 h-full flex flex-col justify-center items-center text-[0.6rem] sm:text-[0.9rem] pl-3 sm:pl-6 z-10">
-              <span className="w-full h-1/3 flex font-semibold justify-start items-center overflow-hidden whitespace-nowrap overflow-y-auto">
+          <div className="lg:w-[70%] w-[65%] h-[90%] bg-white z-50 text-black flex rounded-md mr-2 pr-1 pt-1">
+            <div className="w-1/2 h-full flex flex-col justify-center items-center text-[0.75rem] sm:text-[0.8rem] md:text-[0.7rem] lg:text-[1.1rem] pl-3 lg:pl-6 z-10">
+              <span className="w-full h-1/3 flex font-semibold justify-start items-center overflow-hidden whitespace-nowrap">
                 {criminalName}
               </span>
               <span className="w-full h-1/3 flex justify-start items-center">
@@ -64,7 +65,7 @@ const WantedBox = ({
                 For {criminalDuration} Years
               </span>
             </div>
-            <div className="w-2/4 h-full text-ellipsis overflow-hidden text-[0.5rem] sm:text-sm ">
+            <div className="w-2/4 h-full text-ellipsis overflow-hidden text-[0.7rem] sm:text-[0.6rem] md:text-[0.7rem]  lg:text-[1rem] lg:mb-1">
               {crime}
             </div>
           </div>
@@ -82,7 +83,7 @@ const WantedBox = ({
               Name={criminalName}
               Age={criminalAge}
               Duration={criminalDuration}
-              Img={imageUrl}
+              Img={criminalImg}
               Crime={crime}
               Height={Height}
               DOB={DOB}

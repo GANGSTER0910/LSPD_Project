@@ -14,7 +14,6 @@
 ## Link:
 https://lspd-project.vercel.app
 
-## Screenshots
 
 
 
