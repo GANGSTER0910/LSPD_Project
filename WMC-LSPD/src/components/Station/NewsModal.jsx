@@ -2,13 +2,14 @@ import NewsBox from "./NewsBox";
 import CloseIcon from "@mui/icons-material/Close";
 import { Button } from "@mui/material";
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 
 const NewsModal = ({ isOpen, onClose }) => {
   const [announcements, setAnnouncements] = useState([]);
   const [loading, setLoading] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
   const [popupVisible, setPopupVisible] = useState(false);
-  const [navigate, setNavigate] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const checkAuthentication = async () => {
@@ -29,7 +30,7 @@ const NewsModal = ({ isOpen, onClose }) => {
           setPopupVisible(true); // Show the popup
           setTimeout(() => {
             setPopupVisible(false);
-            setNavigate(true); // Set navigation to true after the popup
+            navigate("/login"); // Navigate after the popup
           }, 3000); // Show the popup for 3 seconds
         }
       } catch (error) {
@@ -37,7 +38,7 @@ const NewsModal = ({ isOpen, onClose }) => {
         setPopupVisible(true); // Show the popup
         setTimeout(() => {
           setPopupVisible(false);
-          setNavigate(true); // Set navigation to true after the popup
+          navigate("/login"); // Navigate after the popup
         }, 3000); // Show the popup for 3 seconds
       }
     };
@@ -66,25 +67,43 @@ const NewsModal = ({ isOpen, onClose }) => {
     };
 
     if (isOpen) {
-      checkAuthentication().then(() => {
-        if (authenticated) {
-          fetchAnnouncements();
-        }
-      });
+      checkAuthentication();
     }
-  }, [isOpen, authenticated]);
+  }, [isOpen, navigate]);
 
   useEffect(() => {
-    if (navigate) {
-      window.location.href = "/login"; // Navigate to the login page
+    if (authenticated) {
+      const fetchAnnouncements = async () => {
+        try {
+          const response = await fetch("https://lspd-project.onrender.com/announcements/list", {
+            method: "GET",
+            mode: "cors",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+          });
+          if (response.ok) {
+            const data = await response.json();
+            setAnnouncements(data);
+          } else {
+            console.error("Failed to fetch announcements");
+          }
+        } catch (error) {
+          console.error("Error fetching announcements:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchAnnouncements();
     }
-  }, [navigate]);
+  }, [authenticated]);
 
   if (!isOpen) return null;
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 ">
+    <div className="fixed inset-0 flex items-center justify-center z-50">
       {popupVisible && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 ">
+        <div className="fixed inset-0 flex items-center justify-center z-50">
           <div className="absolute inset-0 bg-black opacity-50"></div>
           <div className="bg-gray-200 p-4 rounded-2xl z-10">
             <p>Authentication failed. Redirecting...</p>
@@ -92,33 +111,32 @@ const NewsModal = ({ isOpen, onClose }) => {
         </div>
       )}
       <div onClick={onClose} className="absolute inset-0 bg-black opacity-50"></div>
-      <div className=" bg-gray-200 w-[80%] h-[90%] z-10 flex justify-around items-center flex-col p-4 rounded-2xl">
-        <div className=" w-full h-[7%] sm:h-[10%] mb-4 font-pricedown flex justify-end static bg-[#b392ac] rounded-2xl">
-          <h2 className="text-black  flex justify-center items-center w-full h-full text-xl text-nowrap sm:text-4xl ">
+      <div className="bg-gray-200 w-[80%] h-[90%] z-10 flex justify-around items-center flex-col p-4 rounded-2xl">
+        <div className="w-full h-[7%] sm:h-[10%] mb-4 font-pricedown flex justify-end static bg-[#b392ac] rounded-2xl">
+          <h2 className="text-black flex justify-center items-center w-full h-full text-xl text-nowrap sm:text-4xl">
             News & Announcements
           </h2>
 
           <Button onClick={onClose} size="small">
-            <CloseIcon sx={{ fontSize: 22 }}  className="text-black" />
+            <CloseIcon sx={{ fontSize: 22 }} className="text-black" />
           </Button>
         </div>
 
-        <div className="w-full h-[90%]  px-5 py-2 gap-3 flex flex-col overflow-y-auto">
+        <div className="w-full h-[90%] px-5 py-2 gap-3 flex flex-col overflow-y-auto">
           {announcements.map((news) => (
-            <div  key={news.header} className="w-full h-full">
-                <NewsBox
-                  img={news.img}
-                  by={news.by}
-                  content={news.content}
-                  header={news.title}
-                />
-              </div>
-           ))}
+            <div key={news.header} className="w-full h-full">
+              <NewsBox
+                img={news.img}
+                by={news.by}
+                content={news.content}
+                header={news.title}
+              />
+            </div>
+          ))}
         </div>
       </div>
     </div>
   );
 };
-
 
 export default NewsModal;
