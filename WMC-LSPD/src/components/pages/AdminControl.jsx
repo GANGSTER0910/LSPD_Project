@@ -12,7 +12,7 @@ export default function AdminControl(){
     const navigate = useNavigate();
     const fetchUsers = async () => {
         setFetching(true);
-        const response = await fetch('http://localhost:8000/list', {
+        const response = await fetch('https://lspd-project.onrender.com/list', {
             method: 'POST',
             mode: 'cors',
             headers: {

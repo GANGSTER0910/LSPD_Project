@@ -7,7 +7,7 @@ const PrivateOnlyRoute = ({ Component }) => {
 
   const authenticated = async () => {
     try {
-      const response = await fetch('http://localhost:8000/checkAuthentication', {
+      const response = await fetch('https://lspd-project.onrender.com/checkAuthentication', {
         method: 'POST',
         credentials: 'include',
         headers: {

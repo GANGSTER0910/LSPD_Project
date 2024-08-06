@@ -60,7 +60,7 @@ const AddAdminModal = ({ isOpen, onClose }) => {
     formDataObj.append("email", email);
     formDataObj.append("password", password);
     formDataObj.append("role","admin")
-    const response = await fetch('http://localhost:8000/admin', {
+    const response = await fetch('https://lspd-project.onrender.com/admin', {
       method: 'POST',
       // mode: 'cors',
       credentials:'include',

@@ -1,7 +1,7 @@
 import React from "react";
 
 const AdminViewBox = ({ name, contact, img, email }) => {
-  const imageUrl = `http://localhost:8000/images/${img}` ;
+  const imageUrl = `https://lspd-project.onrender.com/images/${img}` ;
 
   return (
     <div className="static bg-white bg-cover sm:w-[48%] w-[96%] h-[20%] border-black border-2 rounded-xl  flex justify-between items-center">

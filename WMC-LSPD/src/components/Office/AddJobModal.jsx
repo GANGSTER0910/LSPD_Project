@@ -45,7 +45,7 @@ const AddJobModal = ({ isOpen, onClose }) => {
     console.log(jobData);
     const { title, description, vacancy, salary, department, status, deadline, requirement } = jobData;
     const datestr = new Date(deadline).toISOString();
-    const response = await fetch('http://localhost:8000/Jobs', {
+    const response = await fetch('https://lspd-project.onrender.com/Jobs', {
       method: 'POST',
       mode: 'cors',
       headers: {

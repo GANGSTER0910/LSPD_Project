@@ -17,7 +17,7 @@ export default function SignUp(){
     const handleSubmit = async () => {
         try {
             console.log(username, email, password, role);
-            const response = await fetch('http://localhost:8000/user', {
+            const response = await fetch('https://lspd-project.onrender.com/user', {
                 method: 'POST',
                 mode: 'cors',
                 headers: {

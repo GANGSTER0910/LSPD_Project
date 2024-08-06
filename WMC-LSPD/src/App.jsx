@@ -15,27 +15,6 @@ import SnackbarManager from "./context/SnackBarManager";
 
 
 const App = () => {
-//   const authenticated = async () => {
-//     try {
-//         const response = await fetch('http://localhost:8000/checkAuthentication', {
-//             method: 'POST',
-//             credentials:'include',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//             },
-            
-//         });
-//         if (response.status === 200) {
-//             const data = await response.json();
-//             console.log(data);
-//             console.log('Authenticated');
-//         } else if (response.status === 307) {
-//             navigate('/login')
-//         }
-//     } catch (error) {
-//         console.error('Failed to fetch', error);
-//     }
-// }
   return (
     <ThemeProvider theme={theme}>
     <SnackbarManager />

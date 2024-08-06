@@ -11,7 +11,7 @@ const ViewAdminModal = ({ isOpen, onClose }) => {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:8000/list', {
+      const response = await fetch('https://lspd-project.onrender.com/list', {
         method: 'POST',
         mode: 'cors',
         headers: {

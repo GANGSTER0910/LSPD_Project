@@ -173,7 +173,7 @@ const WantedListModal = ({ isOpen, onClose }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:8000/most_wanted_list', {
+        const response = await fetch('https://lspd-project.onrender.com/most_wanted_list', {
           method: 'GET',
           mode: 'cors',
           headers: {

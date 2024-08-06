@@ -87,7 +87,7 @@ const CriminalAddModal = ({ isOpen, onClose }) => {
     formDataObj.append("duration",duration);
     formDataObj.append("height",height);
 
-      const response = await fetch('http://localhost:8000/most_wanted_person', {
+      const response = await fetch('https://lspd-project.onrender.com/most_wanted_person', {
       method: 'POST',
       mode: 'cors',
       body: formDataObj,  

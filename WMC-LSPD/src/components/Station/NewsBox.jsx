@@ -143,7 +143,7 @@ import React from "react";
 import LikeBtn from "../../buttons/LikeBtn";
 
 const NewsBox = ({header,content,by,img}) => {
-  const imageUrl = `http://localhost:8000/images/${img}` ;
+  const imageUrl = `https://lspd-project.onrender.com/images/${img}` ;
   return (
     <div className="w-full h-[100px] sm:h-[130px]  bg-white rounded-2xl flex justify-around py-1 shadow-[1px_2px_3px_1px_rgba(0,0,0,0.4)] shadow-light-gray " >
       <div className="sm:w-[17%] w-[25%] h-full rounded-xl ">
