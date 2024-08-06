@@ -8,7 +8,6 @@ import WantedListModal from "./WantedListModal";
 import useStore from "../../Store/store";
 
 const JailScreen = () => {
-  // const [isWantedListOpen, setIsWantedListOpen] = useState(false);
   const { isWantedBoxOpen, setWantedOpen, setCriminalOpen } = useStore();
 
   const navigate = useNavigate();

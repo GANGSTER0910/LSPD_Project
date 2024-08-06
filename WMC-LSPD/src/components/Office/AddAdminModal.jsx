@@ -62,7 +62,6 @@ const AddAdminModal = ({ isOpen, onClose }) => {
     formDataObj.append("role","admin")
     const response = await fetch('https://lspd-project.onrender.com/admin', {
       method: 'POST',
-      // mode: 'cors',
       credentials:'include',
       body:formDataObj
     });
@@ -170,12 +169,6 @@ const AddAdminModal = ({ isOpen, onClose }) => {
                 />
               </div>
 
-              {/* <Button
-                type="submit"
-                className="self-end mt-4 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
-              >
-                Submit
-              </Button> */}
               <div className="w-[99%] h-[10%] overflow-visible flex justify-center items-start mt-5">
                 <button
                   className="button w-[15%] h-[70%] text-xl flex justify-center items-center"

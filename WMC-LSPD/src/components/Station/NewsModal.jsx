@@ -3,13 +3,14 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Button } from "@mui/material";
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
+import useStore from "../../Store/store"; 
 
 const NewsModal = ({ isOpen, onClose }) => {
   const [announcements, setAnnouncements] = useState([]);
   const [loading, setLoading] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
-  const [popupVisible, setPopupVisible] = useState(false);
   const navigate = useNavigate();
+  const { setToastr } = useStore(); 
 
   useEffect(() => {
     const checkAuthentication = async () => {
@@ -27,19 +28,17 @@ const NewsModal = ({ isOpen, onClose }) => {
           setAuthenticated(true);
         } else {
           console.error("Authentication failed:", data.message);
-          setPopupVisible(true); // Show the popup
+          setToastr("Authentication failed. Login Required.");
           setTimeout(() => {
-            setPopupVisible(false);
-            navigate("/login"); // Navigate after the popup
-          }, 3000); // Show the popup for 3 seconds
+            navigate("/login"); 
+          }, 1500); 
         }
       } catch (error) {
         console.error("Error checking authentication:", error);
-        setPopupVisible(true); // Show the popup
+        setToastr("Authentication failed. Login Required."); 
         setTimeout(() => {
-          setPopupVisible(false);
-          navigate("/login"); // Navigate after the popup
-        }, 3000); // Show the popup for 3 seconds
+          navigate("/login"); 
+        }, 1500); 
       }
     };
 
@@ -69,7 +68,7 @@ const NewsModal = ({ isOpen, onClose }) => {
     if (isOpen) {
       checkAuthentication();
     }
-  }, [isOpen, navigate]);
+  }, [isOpen, navigate, setToastr]);
 
   useEffect(() => {
     if (authenticated) {
@@ -102,14 +101,6 @@ const NewsModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
-      {popupVisible && (
-        <div className="fixed inset-0 flex items-center justify-center z-50">
-          <div className="absolute inset-0 bg-black opacity-50"></div>
-          <div className="bg-gray-200 p-4 rounded-2xl z-10">
-            <p>Authentication failed. Login Required...</p>
-          </div>
-        </div>
-      )}
       <div onClick={onClose} className="absolute inset-0 bg-black opacity-50"></div>
       <div className="bg-gray-200 w-[80%] h-[90%] z-10 flex justify-around items-center flex-col p-4 rounded-2xl">
         <div className="w-full h-[7%] sm:h-[10%] mb-4 font-pricedown flex justify-end static bg-[#b392ac] rounded-2xl">
