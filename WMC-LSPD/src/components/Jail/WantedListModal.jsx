@@ -102,7 +102,7 @@ const WantedListModal = ({ isOpen, onClose }) => {
                     </h2>
                   </div>
                   <div className="w-2/4 gap-1 h-full  font-technor font-bold tracking-wider text-[0.8rem] sm:text-[0.8rem] md:text-[1rem] text-nowrap lg:text-xl  text-white flex justify-center items-center">
-                    Total Criminals :- {Criminal.length}
+                    Total Criminals :- {wantedList.length}
                     <img className="lg:w-[25px] w-[15 px] sm:[15px] md:w-[20px] lg:h-[25px]" src={Person} alt="" />
                   </div>
                   <div className="w-1/4 relative right-2 lg:right-0 text-[0.7rem] lg:text-lg h-full flex flex-col justify-center items-center gap-2 lg:gap-1 md:gap-2 sm:gap-3">
