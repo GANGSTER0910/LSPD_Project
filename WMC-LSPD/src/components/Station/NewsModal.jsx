@@ -346,7 +346,7 @@ const NewsModal = ({ isOpen, onClose }) => {
                   img={news.img}
                   by={news.by}
                   content={news.content}
-                  header={news.header}
+                  header={news.title}
                 />
               </div>
            ))}

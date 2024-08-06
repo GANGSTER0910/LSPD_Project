@@ -60,7 +60,7 @@ const ViewTipModal = ({ isOpen, onClose }) => {
                 key={tip.header}
                 by={tip.name}
                 against={tip.against}
-                tip={tip.descrption}
+                tip={tip.description}
                 tipHeader={tip.header}
               />
             ))

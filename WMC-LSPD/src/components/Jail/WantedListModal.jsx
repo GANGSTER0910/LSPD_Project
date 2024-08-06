@@ -281,7 +281,12 @@ const WantedListModal = ({ isOpen, onClose }) => {
                 criminalDuration={criminal.duration}
                 criminalName={criminal.name}
                 crime={criminal.description}
-                criminalImg={criminal.Img}
+                img={criminal.img}
+                City={criminal.city}
+                Sex={criminal.sex}
+                DOB={criminal.dob}
+                Committed={criminal.commited}
+                Height={criminal.height}
                 />
 
                  

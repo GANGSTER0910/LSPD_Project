@@ -108,7 +108,8 @@ const CriminalBoxModal = ({
   Sex,
 }) => {
   if (!isOpen) return null;
-
+  const imageUrl = `http://localhost:8000/images/${Img}` ;
+  
   return (
     <div className="fixed inset-0 justify-center items-center flex z-50 font-technor">
       <div onClick={onClose} className="absolute inset-0"></div>
