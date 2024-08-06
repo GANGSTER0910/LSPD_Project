@@ -19,7 +19,8 @@ from typing import Optional
 from passlib.context import CryptContext
 
 app = FastAPI()
-images_dir = os.path.abspath("D:\\LSPD_Project\\backend\\images")
+current_dir = os.path.dirname(os.path.realpath(__file__))
+images_dir = os.path.join(current_dir, "images")
 app.mount("/images", StaticFiles(directory=images_dir), name="images")
 load_dotenv()
 origins = [
