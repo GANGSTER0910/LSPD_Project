@@ -152,6 +152,7 @@ const WantedListModal = ({ isOpen, onClose }) => {
                 DOB={criminal.dob}
                 Committed={criminal.commited}
                 Height={criminal.height}
+                Rank = {criminal.rank}
                 />
               );
             })}
