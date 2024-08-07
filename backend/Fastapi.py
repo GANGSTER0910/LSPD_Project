@@ -18,7 +18,9 @@ from datetime import *
 import shutil
 from typing import Optional
 from passlib.context import CryptContext
-
+import face_recognition
+import cv2
+import numpy as np
 app = FastAPI()
 current_dir = os.path.dirname(os.path.realpath(__file__))
 images_dir = os.path.join(current_dir, "images")
@@ -84,6 +86,50 @@ def create_cookie(token:str):
     response.set_cookie(key="session",value=token,httponly=True,secure=True, samesite='none',max_age=3600)
     return response
 
+
+def face_Recog(img1_path: str, img2_path: str) -> bool:
+    # Load the known and unknown images
+    known_image = face_recognition.load_image_file(img1_path)
+    known_face_encoding = face_recognition.face_encodings(known_image)[0]
+
+    unknown_image = face_recognition.load_image_file(img2_path)
+    face_locations = face_recognition.face_locations(unknown_image)
+    face_encodings = face_recognition.face_encodings(unknown_image, face_locations)
+
+    # Check if we found any faces in the unknown image
+    if not face_encodings:
+        return False
+
+    # Compare each face encoding with the known face encoding
+    for face_encoding in face_encodings:
+        matches = face_recognition.compare_faces([known_face_encoding], face_encoding)
+        if True in matches:
+            return True
+
+    return False
+
+@app.post("/face/check")
+async def check_face_match(img1: UploadFile = File(...), img2: UploadFile = File(...)) -> Dict[str, str]:
+    file_location = f"temp_{img1.filename}"
+    with open(file_location, "wb") as buffer:
+        shutil.copyfileobj(img1.file, buffer)
+
+    file_location1 = f"temp_{img2.filename}"
+    with open(file_location1, "wb") as buffer:
+        shutil.copyfileobj(img2.file, buffer)
+    
+    match = face_Recog(file_location, file_location1)
+
+    # Clean up temporary files
+    os.remove(file_location)
+    os.remove(file_location1)
+
+    # Return the response based on face match result
+    if match:
+        return {"status": "Face matches"}
+    else:
+        return {"status": "Face does not match"}
+    
 
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)

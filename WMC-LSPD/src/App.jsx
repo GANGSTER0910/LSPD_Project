@@ -11,7 +11,7 @@ import Signup from "./components/pages/SignUp"
 import { ThemeProvider } from "@mui/material";
 import theme from "./theme";
 import SnackbarManager from "./context/SnackBarManager";
-
+import Face from "../src/components/Station/Face"
 
 
 const App = () => {
@@ -23,6 +23,7 @@ const App = () => {
         <Route path="/" element={<PublicOnlyRoute Component={Hero} />} />
         <Route path="/station" element={<PublicOnlyRoute Component={StationScreen} />} />
         <Route path="/jail" element={<PublicOnlyRoute Component={JailScreen} />} />
+        <Route path="/face" element={<PublicOnlyRoute Component={Face} />} />
         <Route path="/office" element={<Adminonlyroute Component={OfficeScreen} />} />
         <Route path="/login" element={<PublicOnlyRoute Component={Login} />} />
         <Route path="/signup" element={<PublicOnlyRoute Component={Signup} />} />

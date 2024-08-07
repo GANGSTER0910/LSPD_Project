@@ -40,6 +40,13 @@ const StationScreen = () => {
         <DotBtn nav={"Office"} gate={true} />
       </div>
       <div
+        className="absolute top-[25%] right-[5%] lg:top-[26%] md:right-[23%] lg:right-[47%] flex flex-col  justify-center items-center"
+        onClick={() => navigate("/face")}
+      >
+        <h2 className="lg:hidden text-black bg-white bg-opacity-[50%] rounded-md px-3">Office</h2>
+        <DotBtn nav={"Face"} gate={true} />
+      </div>
+      <div
         className="absolute top-[20%] right-[-75%] lg:top-[22%] lg:right-[11%] md:right-[11%] flex flex-col  justify-center items-center"
         onClick={() => setIsNewsOpen(true)}
       >
