@@ -66,20 +66,7 @@ export default function SignUp(){
                         className="text-black font-bold w-full border-2 rounded-md px-2 py-1"
                     />
                 </div>
-                <div className="flex items-center gap-x-2 w-full">
-                    <div className="w-10 flex justify-center">
-                        <IoMdMail size={30}/>
-                    </div>
-                    <select
-                        className="border-2 w-full rounded-md px-2 py-1 text-black font-semibold"
-                        onChange={(e) => {
-                            setRole(e.target.value)
-                        }}
-                    >
-                        <option value="user">User</option>
-                        <option value="admin">Admin</option>
-                    </select>
-                </div>
+              
                 <div className="flex items-center gap-x-2 w-full">
                     <div className="w-10 flex justify-center">
                         <RiLockPasswordFill size={30}/>

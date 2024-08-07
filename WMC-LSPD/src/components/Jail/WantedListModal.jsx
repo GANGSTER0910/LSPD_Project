@@ -39,9 +39,9 @@ const WantedListModal = ({ isOpen, onClose }) => {
   const starCounts = useMemo(() => {
     const counts = { Star1: 0, Star2: 0, Star3: 0, Star4: 0, Star5: 0 };
 
-    wantedList.forEach(({ Rank }) => {
-      if (counts[`Star${Rank}`] !== undefined) {
-        counts[`Star${Rank}`]++;
+    wantedList.forEach(({ rank }) => {
+      if (counts[`Star${rank}`] !== undefined) {
+        counts[`Star${rank}`]++;
       }
     });
 
