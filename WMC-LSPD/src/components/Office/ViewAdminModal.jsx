@@ -56,7 +56,7 @@ const ViewAdminModal = ({ isOpen, onClose }) => {
         </div>
 
         <div className="w-full h-[90%] flex flex-wrap gap-4  justify-center items-start text-2xl overflow-y-auto overflow-hidden">                                      
-          {Admin.map((admin) => {
+          {data.map((admin) => {
             return (
               <AdminViewBox
                 key={admin.name}

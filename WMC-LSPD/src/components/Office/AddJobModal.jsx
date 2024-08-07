@@ -65,13 +65,13 @@ const AddJobModal = ({ isOpen, onClose }) => {
     if (!/^[a-zA-Z\s]{1,10}$/.test(status)) {
       return setToastr("Invalid Status");
     }
-    if (!/^[a-zA-Z0-9\s]{1,500}$/.test(description)) {
+    if (!/^[a-zA-Z0-9\s]{1,1000}$/.test(description)) {
       return setToastr("Exceeding 500 Words or Unknown characters");
     }
     if (!/^[0-9\s]{1,6}$/.test(salary)) {
       return setToastr("Invalid Salary");
     }
-    if (!/^[a-zA-Z0-9\s]{1,200}$/.test(requirement)) {
+    if (!/^[a-zA-Z0-9\s]{1,1000}$/.test(requirement)) {
       return setToastr("Exceeding 200 Words or Unknown characters");
     }
     if (!/^[a-zA-Z\s]{1,30}$/.test(department)) {
