@@ -46,7 +46,7 @@ The Los Santos Police Department (LSPD) is enhancing its online presence with a 
   * Admins can post and update job opportunities in the Careers section
 
 ## Tech Stack
-* Frontend : React, Vite and GSAP
+* Frontend : React, Vite, GSAP and Tailwind CSS
 * Backend : Python with FastAPI
 * DataBase : MongoDB
 * Authentication : JWT Token
