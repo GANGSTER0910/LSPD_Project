@@ -14,7 +14,7 @@ function Face() {
     formData.append("img2", image2);
 
     try {
-      const response = await fetch("http://localhost:8000/face/check", {
+      const response = await fetch("https://lspd-project.onrender.com/face/check", {
         method: "POST",
         body: formData,
       });
