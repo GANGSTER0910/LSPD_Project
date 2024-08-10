@@ -67,3 +67,13 @@ Run the development server
 ```markdown
 npm run dev
 ```
+Run Backend Server
+``` markdown
+cd backend
+```
+```markdown
+pip install -r requirements.txt
+Run python Fastapi.py 
+```
+
+
