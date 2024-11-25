@@ -4,7 +4,7 @@ import SkipBtn from "../../buttons/SkipBtn";
 import { useNavigate } from "react-router-dom";
 import NewsModal from "./NewsModal";
 import CareerModal from "./CareerModal";
-
+// import Exit from "./Exit"
 import DotBtn from "../../buttons/DotBtn";
 import TipModal from "./TipModal";
 import useStore from "../../Store/store";
@@ -41,11 +41,19 @@ const StationScreen = () => {
       </div>
       <div
         className="absolute top-[25%] right-[5%] lg:top-[26%] md:right-[23%] lg:right-[47%] flex flex-col  justify-center items-center"
+        onClick={() => navigate("/")}
+      >
+        <h2 className="lg:hidden text-black bg-white bg-opacity-[50%] rounded-md px-3">Exit</h2>
+        <DotBtn nav={"Exit"} gate={true} />
+      </div>
+      <div
+        className="absolute top-[25%] right-[5%] lg:top-[46.5%] md:right-[23%] lg:right-[7%] flex flex-col  justify-center items-center"
         onClick={() => navigate("/face")}
       >
-        <h2 className="lg:hidden text-black bg-white bg-opacity-[50%] rounded-md px-3">Office</h2>
-        <DotBtn nav={"Face"} gate={true} />
+        <h2 className="lg:hidden text-black bg-white bg-opacity-[50%] rounded-md px-3">Face</h2>
+        <DotBtn nav={"Face"} />
       </div>
+
       <div
         className="absolute top-[20%] right-[-75%] lg:top-[22%] lg:right-[11%] md:right-[11%] flex flex-col  justify-center items-center"
         onClick={() => setIsNewsOpen(true)}

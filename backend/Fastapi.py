@@ -86,6 +86,10 @@ def create_cookie(token:str):
     response.set_cookie(key="session",value=token,httponly=True,secure=True, samesite='none',max_age=3600)
     return response
 
+def delete_cookie():
+    response = JSONResponse(content="Logged out successfully!")
+    response.delete_cookie(key="session",httponly=True,secure=True, samesite='none')
+    return response
 
 def face_Recog(img1_path: str, img2_path: str) -> bool:
     # Load the known and unknown images
@@ -225,7 +229,13 @@ async def get_admin(admin:User_login):
     expire_timedelta = timedelta(minutes=access_token_expire_time)
     user_token = create_access_token(user1,expire_timedelta)
     return create_cookie(user_token)  
-   
+
+@app.post("/logout")
+async def logout_func(request: Request):
+    token = request.cookies.get('session')
+    if not token:
+        raise HTTPException(status_code=400, detail="No cookie found")
+    return delete_cookie()
 @app.post("/list")
 async def get_list(role:User_list):
     user_list = db1.get_collection('Admin').find({"role":role.role})
