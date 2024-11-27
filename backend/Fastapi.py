@@ -88,7 +88,7 @@ def create_cookie(token:str):
 
 def delete_cookie():
     response = JSONResponse(content="Logged out successfully!")
-    response.delete_cookie(key="session",httponly=True,secure=True, samesite='none')
+    response.delete_cookie(key="session",httponly=True, secure=True, samesite="none")
     return response
 
 # def face_Recog(img1_path: str, img2_path: str) -> bool:
@@ -232,9 +232,7 @@ async def get_admin(admin:User_login):
 
 @app.post("/logout")
 async def logout_func(request: Request):
-    token = request.cookies.get('session')
-    if not token:
-        raise HTTPException(status_code=400, detail="No cookie found")
+    token = request.cookies.get("session")
     return delete_cookie()
 @app.post("/list")
 async def get_list(role:User_list):
